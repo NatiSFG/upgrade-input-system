@@ -1,0 +1,16 @@
+{
+    "name": "games.starforce.unity-fixer",
+    "version": "1.0.0",
+    "displayName": "Unity Fixer",
+    "description": "This package fixes all the stupid mistakes Unity has swept under the rug for everyone else to deal with :)",
+    "unity": "2023.1",
+    "keywords": [
+        "starforcegames",
+        "editor"
+    ],
+    "author": {
+        "name": "Natalia DaLomba",
+        "email": "natalia@starforce.games",
+        "url": "https://starforce.games"
+    }
+}
