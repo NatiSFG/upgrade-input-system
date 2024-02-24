@@ -4,28 +4,21 @@ using UnityEngine;
 using Game.Scripts.LiveObjects;
 using Cinemachine;
 
-namespace Game.Scripts.Player
-{
+namespace Game.Scripts.Player {
     [RequireComponent(typeof(CharacterController))]
-    public class Player : MonoBehaviour
-    {
-        private CharacterController _controller;
-        private Animator _anim;
-        [SerializeField]
-        private float _speed = 5.0f;
-        private bool _playerGrounded;
-        [SerializeField]
-        private Detonator _detonator;
-        private bool _canMove = true;
-        [SerializeField]
-        private CinemachineVirtualCamera _followCam;
-        [SerializeField]
-        private GameObject _model;
+    public class Player : MonoBehaviour {
+        [SerializeField] private float speed = 5.0f;
+        [SerializeField] private Detonator detonator;
+        [SerializeField] private CinemachineVirtualCamera followCamera;
+        [SerializeField] private GameObject model;
 
+        private bool isPlayerGrounded;
+        private bool canMove = true;
+        private CharacterController controller;
+        private Animator anim;
 
-        private void OnEnable()
-        {
-            InteractableZone.onZoneInteractionComplete += InteractableZone_onZoneInteractionComplete;
+        private void OnEnable() {
+            InteractableZone.onZoneInteractionComplete += ShowDetonatorOrExplode;
             Laptop.onHackComplete += ReleasePlayerControl;
             Laptop.onHackEnded += ReturnPlayerControl;
             Forklift.onDriveModeEntered += ReleasePlayerControl;
@@ -33,60 +26,39 @@ namespace Game.Scripts.Player
             Forklift.onDriveModeEntered += HidePlayer;
             Drone.OnEnterFlightMode += ReleasePlayerControl;
             Drone.onExitFlightmode += ReturnPlayerControl;
-        } 
-
-        private void Start()
-        {
-            _controller = GetComponent<CharacterController>();
-
-            if (_controller == null)
-                Debug.LogError("No Character Controller Present");
-
-            _anim = GetComponentInChildren<Animator>();
-
-            if (_anim == null)
-                Debug.Log("Failed to connect the Animator");
         }
 
-        private void Update()
-        {
-            if (_canMove == true)
+        private void Start() {
+            controller = GetComponent<CharacterController>();
+            anim = GetComponentInChildren<Animator>();
+        }
+
+        private void Update() {
+            if (canMove == true)
                 CalcutateMovement();
-
         }
 
-        private void CalcutateMovement()
-        {
-            _playerGrounded = _controller.isGrounded;
+        private void CalcutateMovement() {
+            isPlayerGrounded = controller.isGrounded;
             float h = Input.GetAxisRaw("Horizontal");
             float v = Input.GetAxisRaw("Vertical");
-
             transform.Rotate(transform.up, h);
 
             var direction = transform.forward * v;
-            var velocity = direction * _speed;
+            var velocity = direction * speed;
+            anim.SetFloat("Speed", Mathf.Abs(velocity.magnitude));
 
-
-            _anim.SetFloat("Speed", Mathf.Abs(velocity.magnitude));
-
-
-            if (_playerGrounded)
+            if (isPlayerGrounded)
                 velocity.y = 0f;
-            if (!_playerGrounded)
-            {
+            if (!isPlayerGrounded)
                 velocity.y += -20f * Time.deltaTime;
-            }
-            
-            _controller.Move(velocity * Time.deltaTime);                      
-
+            controller.Move(velocity * Time.deltaTime);
         }
 
-        private void InteractableZone_onZoneInteractionComplete(InteractableZone zone)
-        {
-            switch(zone.GetZoneID())
-            {
+        private void ShowDetonatorOrExplode(InteractableZone zone) {
+            switch (zone.GetZoneID()) {
                 case 1: //place c4
-                    _detonator.Show();
+                    detonator.Show();
                     break;
                 case 2: //Trigger Explosion
                     TriggerExplosive();
@@ -94,32 +66,27 @@ namespace Game.Scripts.Player
             }
         }
 
-        private void ReleasePlayerControl()
-        {
-            _canMove = false;
-            _followCam.Priority = 9;
+        private void ReleasePlayerControl() {
+            canMove = false;
+            followCamera.Priority = 9;
         }
 
-        private void ReturnPlayerControl()
-        {
-            _model.SetActive(true);
-            _canMove = true;
-            _followCam.Priority = 10;
+        private void ReturnPlayerControl() {
+            model.SetActive(true);
+            canMove = true;
+            followCamera.Priority = 10;
         }
 
-        private void HidePlayer()
-        {
-            _model.SetActive(false);
-        }
-               
-        private void TriggerExplosive()
-        {
-            _detonator.TriggerExplosion();
+        private void HidePlayer() {
+            model.SetActive(false);
         }
 
-        private void OnDisable()
-        {
-            InteractableZone.onZoneInteractionComplete -= InteractableZone_onZoneInteractionComplete;
+        private void TriggerExplosive() {
+            detonator.TriggerExplosion();
+        }
+
+        private void OnDisable() {
+            InteractableZone.onZoneInteractionComplete -= ShowDetonatorOrExplode;
             Laptop.onHackComplete -= ReleasePlayerControl;
             Laptop.onHackEnded -= ReturnPlayerControl;
             Forklift.onDriveModeEntered -= ReleasePlayerControl;
@@ -128,7 +95,5 @@ namespace Game.Scripts.Player
             Drone.OnEnterFlightMode -= ReleasePlayerControl;
             Drone.onExitFlightmode -= ReturnPlayerControl;
         }
-
     }
 }
-
