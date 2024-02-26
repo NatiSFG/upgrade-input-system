@@ -7,15 +7,15 @@ using Cinemachine;
 namespace Game.Scripts.Player {
     [RequireComponent(typeof(CharacterController))]
     public class Player : MonoBehaviour {
-        [SerializeField] private float speed = 5.0f;
         [SerializeField] private Detonator detonator;
         [SerializeField] private CinemachineVirtualCamera followCamera;
         [SerializeField] private GameObject model;
+        [SerializeField] private float speed = 5.0f;
 
-        private bool isPlayerGrounded;
-        private bool canMove = true;
         private CharacterController controller;
         private Animator anim;
+        private bool isPlayerGrounded;
+        private bool canMove = true;
 
         private void OnEnable() {
             InteractableZone.onZoneInteractionComplete += ShowDetonatorOrExplode;

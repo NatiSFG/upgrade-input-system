@@ -2,9 +2,9 @@
 using UnityEngine;
 
 public class ReadMe : ScriptableObject {
+	public Section[] sections;
 	public Texture2D icon;
 	public string title;
-	public Section[] sections;
 	public bool loadedLayout;
 	
 	[Serializable]

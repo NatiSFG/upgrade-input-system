@@ -1,20 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
-using System;
 using System.IO;
 using System.Reflection;
 
 [CustomEditor(typeof(ReadMe))]
 [InitializeOnLoad]
-public class ReadmeEditor : Editor {
+public class ReadMeEditor : Editor {
     [SerializeField] GUIStyle link;
     [SerializeField] GUIStyle title;
     [SerializeField] GUIStyle heading;
     [SerializeField] GUIStyle body;
 
-    static string kShowedReadmeSessionStateName = "ReadmeEditor.showedReadme";
+    static string kShowedReadMeSessionStateName = "ReadmeEditor.showedReadme";
     static float kSpace = 16f;
 
     bool isInitialized;
@@ -24,14 +21,14 @@ public class ReadmeEditor : Editor {
     GUIStyle Heading => heading;
     GUIStyle Body => body;
 
-    static ReadmeEditor() {
-        EditorApplication.delayCall += SelectReadMeAutomatically;
+    static ReadMeEditor() {
+        EditorApplication.delayCall += AutoSelectReadMe;
     }
 
-    static void SelectReadMeAutomatically() {
-        if (!SessionState.GetBool(kShowedReadmeSessionStateName, false)) {
+    static void AutoSelectReadMe() {
+        if (!SessionState.GetBool(kShowedReadMeSessionStateName, false)) {
             var readMe = SelectReadMe();
-            SessionState.SetBool(kShowedReadmeSessionStateName, true);
+            SessionState.SetBool(kShowedReadMeSessionStateName, true);
 
             if (readMe && !readMe.loadedLayout) {
                 LoadLayout();
