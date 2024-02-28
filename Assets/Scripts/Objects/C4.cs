@@ -16,7 +16,7 @@ namespace Game.Scripts.LiveObjects {
             if (count > 0) {
                 foreach (var obj in hits) {
                     if (obj != null && obj.TryGetComponent<IDestroyable>(out IDestroyable destroyable))
-                            destroyable.DestroyAction();
+                        destroyable.DestroyAction();
                 }
             }
             Destroy(this.gameObject);

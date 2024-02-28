@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Game.Scripts.LiveObjects;
 using Cinemachine;
+using UnityEngine.InputSystem;
 
 namespace Game.Scripts.Player {
     [RequireComponent(typeof(CharacterController))]
@@ -10,12 +9,22 @@ namespace Game.Scripts.Player {
         [SerializeField] private Detonator detonator;
         [SerializeField] private CinemachineVirtualCamera followCamera;
         [SerializeField] private GameObject model;
-        [SerializeField] private float speed = 5.0f;
+        [Header("Movement")]
+        [SerializeField] private float currentWalkSpeed;
+        [SerializeField] private float walkSpeed = 2.5f;
+        [SerializeField] private float rotateSpeed = 1;
 
-        private CharacterController controller;
+
+        private PlayerInputActions input;
         private Animator anim;
-        private bool isPlayerGrounded;
-        private bool canMove = true;
+        private bool canWalk = true;
+
+        private void Start() {
+            input = new PlayerInputActions();
+            input.PlayerMovement.Enable();
+
+            anim = GetComponentInChildren<Animator>();
+        }
 
         private void OnEnable() {
             InteractZone.onInteractionComplete += ShowDetonatorOrExplode;
@@ -24,35 +33,60 @@ namespace Game.Scripts.Player {
             Forklift.onDriveModeEntered += ReleasePlayerControl;
             Forklift.onDriveModeExited += ReturnPlayerControl;
             Forklift.onDriveModeEntered += HidePlayer;
-            Drone.OnEnterFlightMode += ReleasePlayerControl;
+            Drone.onEnterFlightMode += ReleasePlayerControl;
             Drone.onExitFlightmode += ReturnPlayerControl;
         }
 
-        private void Start() {
-            controller = GetComponent<CharacterController>();
-            anim = GetComponentInChildren<Animator>();
+        private void OnDisable() {
+            InteractZone.onInteractionComplete -= ShowDetonatorOrExplode;
+            Laptop.onHackComplete -= ReleasePlayerControl;
+            Laptop.onHackEnded -= ReturnPlayerControl;
+            Forklift.onDriveModeEntered -= ReleasePlayerControl;
+            Forklift.onDriveModeExited -= ReturnPlayerControl;
+            Forklift.onDriveModeEntered -= HidePlayer;
+            Drone.onEnterFlightMode -= ReleasePlayerControl;
+            Drone.onExitFlightmode -= ReturnPlayerControl;
         }
 
-        private void Update() {
-            if (canMove == true)
+        private void Update(){
+            if (canWalk)
                 CalcutateMovement();
         }
 
         private void CalcutateMovement() {
-            isPlayerGrounded = controller.isGrounded;
+            #region old code
+            /*
+            _playerGrounded = _controller.isGrounded;
             float h = Input.GetAxisRaw("Horizontal");
             float v = Input.GetAxisRaw("Vertical");
+
             transform.Rotate(transform.up, h);
 
             var direction = transform.forward * v;
-            var velocity = direction * speed;
-            anim.SetFloat("Speed", Mathf.Abs(velocity.magnitude));
+            var velocity = direction * _speed;
 
-            if (isPlayerGrounded)
+
+            _anim.SetFloat("Speed", Mathf.Abs(velocity.magnitude));
+
+
+            if (_playerGrounded)
                 velocity.y = 0f;
-            if (!isPlayerGrounded)
+            if (!_playerGrounded)
+            {
                 velocity.y += -20f * Time.deltaTime;
-            controller.Move(velocity * Time.deltaTime);
+            }
+            
+            _controller.Move(velocity * Time.deltaTime);
+            */
+            #endregion
+            Vector2 walk = input.PlayerMovement.Move.ReadValue<Vector2>();
+            currentWalkSpeed = walk.magnitude > 0 ? walkSpeed : 0f;
+            transform.Translate(new Vector3(walk.x, 0, walk.y) * Time.deltaTime * currentWalkSpeed);
+            if (anim != null)
+                anim.SetFloat("Speed", currentWalkSpeed);
+
+            //float rotate = input.PlayerMovement.Rotate.ReadValue<Vector2>();
+            //transform.Rotate(transform.up, rotate.normalized);
         }
 
         private void ShowDetonatorOrExplode(InteractZone zone) {
@@ -67,13 +101,13 @@ namespace Game.Scripts.Player {
         }
 
         private void ReleasePlayerControl() {
-            canMove = false;
+            canWalk = false;
             followCamera.Priority = 9;
         }
 
         private void ReturnPlayerControl() {
             model.SetActive(true);
-            canMove = true;
+            canWalk = true;
             followCamera.Priority = 10;
         }
 
@@ -83,17 +117,6 @@ namespace Game.Scripts.Player {
 
         private void TriggerExplosive() {
             detonator.TriggerExplosion();
-        }
-
-        private void OnDisable() {
-            InteractZone.onInteractionComplete -= ShowDetonatorOrExplode;
-            Laptop.onHackComplete -= ReleasePlayerControl;
-            Laptop.onHackEnded -= ReturnPlayerControl;
-            Forklift.onDriveModeEntered -= ReleasePlayerControl;
-            Forklift.onDriveModeExited -= ReturnPlayerControl;
-            Forklift.onDriveModeEntered -= HidePlayer;
-            Drone.OnEnterFlightMode -= ReleasePlayerControl;
-            Drone.onExitFlightmode -= ReturnPlayerControl;
         }
     }
 }

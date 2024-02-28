@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using Game.Scripts.UI;
@@ -19,20 +17,24 @@ namespace Game.Scripts.LiveObjects {
 
         private bool inFlightMode = false;
 
-        public static event Action OnEnterFlightMode;
+        public static event Action onEnterFlightMode;
         public static event Action onExitFlightmode;
 
         private void OnEnable() {
             InteractZone.onInteractionComplete += EnterFlightMode;
         }
 
+        private void OnDisable() {
+            InteractZone.onInteractionComplete -= EnterFlightMode;
+        }
+
         private void EnterFlightMode(InteractZone zone) {
             //drone cutscene
             if (inFlightMode != true && zone.GetZoneID() == 4) {
-                propAnim.SetTrigger("StartProps");
+                propAnim.SetTrigger("Start Flying");
                 droneCamera.Priority = 11;
                 inFlightMode = true;
-                OnEnterFlightMode?.Invoke();
+                onEnterFlightMode?.Invoke();
                 UIManager.Instance.DroneView(true);
                 interact.CompleteTask(4);
             }
@@ -47,7 +49,7 @@ namespace Game.Scripts.LiveObjects {
         private void Update() {
             if (inFlightMode) {
                 CalculateTilt();
-                CalculateMovementUpdate();
+                Rotate();
 
                 if (Input.GetKeyDown(KeyCode.Escape)) {
                     inFlightMode = false;
@@ -60,10 +62,10 @@ namespace Game.Scripts.LiveObjects {
         private void FixedUpdate() {
             rb.AddForce(transform.up * (9.81f), ForceMode.Acceleration);
             if (inFlightMode)
-                CalculateMovementFixedUpdate();
+                UpAndDownMovement();
         }
 
-        private void CalculateMovementUpdate() {
+        private void Rotate() {
             if (Input.GetKey(KeyCode.LeftArrow)) {
                 var tempRot = transform.localRotation.eulerAngles;
                 tempRot.y -= speed / 3;
@@ -76,8 +78,8 @@ namespace Game.Scripts.LiveObjects {
             }
         }
 
-        private void CalculateMovementFixedUpdate() {
-            if (Input.GetKey(KeyCode.Space))
+        private void UpAndDownMovement() {
+            if (Input.GetKey(KeyCode.F))
                 rb.AddForce(transform.up * speed, ForceMode.Acceleration);
             if (Input.GetKey(KeyCode.V))
                 rb.AddForce(-transform.up * speed, ForceMode.Acceleration);
@@ -89,10 +91,6 @@ namespace Game.Scripts.LiveObjects {
             else if (Input.GetKey(KeyCode.W)) transform.rotation = Quaternion.Euler(30, transform.localRotation.eulerAngles.y, 0);
             else if (Input.GetKey(KeyCode.S)) transform.rotation = Quaternion.Euler(-30, transform.localRotation.eulerAngles.y, 0);
             else transform.rotation = Quaternion.Euler(0, transform.localRotation.eulerAngles.y, 0);
-        }
-
-        private void OnDisable() {
-            InteractZone.onInteractionComplete -= EnterFlightMode;
         }
     }
 }
