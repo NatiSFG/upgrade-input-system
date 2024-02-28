@@ -43,7 +43,8 @@ namespace Game.Scripts.LiveObjects {
         }
 
         public void Show() {
-            renderer.enabled = true;
+            if (renderer != null)
+                renderer.enabled = true;
         }
 
         private void Ondisable() {

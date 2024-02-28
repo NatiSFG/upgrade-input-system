@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Game.Scripts.LiveObjects;
 using Cinemachine;
+using UnityEngine.InputSystem;
 
 namespace Game.Scripts.Player {
     [RequireComponent(typeof(CharacterController))]
@@ -10,11 +11,11 @@ namespace Game.Scripts.Player {
         [SerializeField] private Detonator detonator;
         [SerializeField] private CinemachineVirtualCamera followCamera;
         [SerializeField] private GameObject model;
-        [SerializeField] private float speed = 5.0f;
+        [SerializeField] private float currentSpeed;
+        [SerializeField] private float walkSpeed = 2.5f;
 
-        private CharacterController controller;
+        private PlayerInputActions input;
         private Animator anim;
-        private bool isPlayerGrounded;
         private bool canMove = true;
 
         private void OnEnable() {
@@ -29,30 +30,24 @@ namespace Game.Scripts.Player {
         }
 
         private void Start() {
-            controller = GetComponent<CharacterController>();
+            input = new PlayerInputActions();
+            input.PlayerMovement.Enable();
+
             anim = GetComponentInChildren<Animator>();
         }
 
         private void Update() {
-            if (canMove == true)
+            if (canMove)
                 CalcutateMovement();
         }
 
         private void CalcutateMovement() {
-            isPlayerGrounded = controller.isGrounded;
-            float h = Input.GetAxisRaw("Horizontal");
-            float v = Input.GetAxisRaw("Vertical");
-            transform.Rotate(transform.up, h);
-
-            var direction = transform.forward * v;
-            var velocity = direction * speed;
-            anim.SetFloat("Speed", Mathf.Abs(velocity.magnitude));
-
-            if (isPlayerGrounded)
-                velocity.y = 0f;
-            if (!isPlayerGrounded)
-                velocity.y += -20f * Time.deltaTime;
-            controller.Move(velocity * Time.deltaTime);
+            if (anim != null) {
+                Vector2 move = input.PlayerMovement.Move.ReadValue<Vector2>();
+                currentSpeed = move.magnitude > 0 ? walkSpeed : 0f;
+                anim.SetFloat("Speed", currentSpeed);
+                transform.Translate(new Vector3(move.x, 0, move.y) * Time.deltaTime * currentSpeed);
+            }
         }
 
         private void ShowDetonatorOrExplode(InteractZone zone) {
