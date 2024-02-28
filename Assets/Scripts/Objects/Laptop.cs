@@ -11,7 +11,7 @@ namespace Game.Scripts.LiveObjects {
         [SerializeField] private Slider progressBar;
         [SerializeField] private int hackTime = 5;
         [SerializeField] private CinemachineVirtualCamera[] cameras;
-        [SerializeField] private InteractableZone interactableZone;
+        [SerializeField] private InteractZone interact;
 
         private int activeCamera = 0;
         private bool isHacked = false;
@@ -20,8 +20,8 @@ namespace Game.Scripts.LiveObjects {
         public static event Action onHackEnded;
 
         private void OnEnable() {
-            InteractableZone.onHoldStarted += InteractableZone_onHoldStarted;
-            InteractableZone.onHoldEnded += InteractableZone_onHoldEnded;
+            InteractZone.onHoldStarted += InteractableZone_onHoldStarted;
+            InteractZone.onHoldEnded += InteractableZone_onHoldEnded;
         }
 
         private void Update() {
@@ -82,7 +82,7 @@ namespace Game.Scripts.LiveObjects {
 
             //successfully hacked
             isHacked = true;
-            interactableZone.CompleteTask(3);
+            interact.CompleteTask(3);
 
             //hide progress bar
             progressBar.gameObject.SetActive(false);
@@ -92,8 +92,8 @@ namespace Game.Scripts.LiveObjects {
         }
 
         private void OnDisable() {
-            InteractableZone.onHoldStarted -= InteractableZone_onHoldStarted;
-            InteractableZone.onHoldEnded -= InteractableZone_onHoldEnded;
+            InteractZone.onHoldStarted -= InteractableZone_onHoldStarted;
+            InteractZone.onHoldEnded -= InteractableZone_onHoldEnded;
         }
     }
 }

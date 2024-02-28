@@ -18,7 +18,7 @@ namespace Game.Scripts.Player {
         private bool canMove = true;
 
         private void OnEnable() {
-            InteractableZone.onZoneInteractionComplete += ShowDetonatorOrExplode;
+            InteractZone.onInteractionComplete += ShowDetonatorOrExplode;
             Laptop.onHackComplete += ReleasePlayerControl;
             Laptop.onHackEnded += ReturnPlayerControl;
             Forklift.onDriveModeEntered += ReleasePlayerControl;
@@ -55,7 +55,7 @@ namespace Game.Scripts.Player {
             controller.Move(velocity * Time.deltaTime);
         }
 
-        private void ShowDetonatorOrExplode(InteractableZone zone) {
+        private void ShowDetonatorOrExplode(InteractZone zone) {
             switch (zone.GetZoneID()) {
                 case 1: //place c4
                     detonator.Show();
@@ -86,7 +86,7 @@ namespace Game.Scripts.Player {
         }
 
         private void OnDisable() {
-            InteractableZone.onZoneInteractionComplete -= ShowDetonatorOrExplode;
+            InteractZone.onInteractionComplete -= ShowDetonatorOrExplode;
             Laptop.onHackComplete -= ReleasePlayerControl;
             Laptop.onHackEnded -= ReturnPlayerControl;
             Forklift.onDriveModeEntered -= ReleasePlayerControl;

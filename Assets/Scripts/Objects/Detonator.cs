@@ -5,20 +5,20 @@ using UnityEngine;
 namespace Game.Scripts.LiveObjects {
     public class Detonator : MonoBehaviour {
         [SerializeField] private C4 c4;
-        [SerializeField] private InteractableZone[] interactableZone;
+        [SerializeField] private InteractZone[] interacts;
 
         private bool c4Placed;
         private new MeshRenderer renderer;
 
         private void OnEnable() {
-            InteractableZone.onZoneInteractionComplete += PlaceC4;
+            InteractZone.onInteractionComplete += PlaceC4;
         }
 
         private void Start() {
             renderer = GetComponent<MeshRenderer>();
         }
 
-        private void PlaceC4(InteractableZone zone) {
+        private void PlaceC4(InteractZone zone) {
             if (c4Placed != true && zone.GetZoneID() == 1) {
                 PlaceC4(zone.GetItems()[0].transform);
                 c4Placed = true;
@@ -31,7 +31,7 @@ namespace Game.Scripts.LiveObjects {
 
             c4.Explode();
             c4Placed = false;
-            interactableZone[1].CompleteTask(2);
+            interacts[1].CompleteTask(2);
             Destroy(this.gameObject);
         }
 
@@ -39,7 +39,7 @@ namespace Game.Scripts.LiveObjects {
             c4.Place(target);
             c4.gameObject.SetActive(true);
             c4Placed = true;
-            interactableZone[0].CompleteTask(1);
+            interacts[0].CompleteTask(1);
         }
 
         public void Show() {
@@ -47,7 +47,7 @@ namespace Game.Scripts.LiveObjects {
         }
 
         private void Ondisable() {
-            InteractableZone.onZoneInteractionComplete -= PlaceC4;
+            InteractZone.onInteractionComplete -= PlaceC4;
         }
     }
 }

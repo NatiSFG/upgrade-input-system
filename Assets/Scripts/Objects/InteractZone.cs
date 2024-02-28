@@ -6,7 +6,7 @@ using Game.Scripts.UI;
 
 
 namespace Game.Scripts.LiveObjects {
-    public class InteractableZone : MonoBehaviour {
+    public class InteractZone : MonoBehaviour {
         private enum ZoneType {
             Collectable,
             Action,
@@ -35,12 +35,12 @@ namespace Game.Scripts.LiveObjects {
 
         public static int CurrentZoneID { get; set; }
 
-        public static event Action<InteractableZone> onZoneInteractionComplete;
+        public static event Action<InteractZone> onInteractionComplete;
         public static event Action<int> onHoldStarted;
         public static event Action<int> onHoldEnded;
 
         private void OnEnable() {
-            InteractableZone.onZoneInteractionComplete += SetMarker;
+            InteractZone.onInteractionComplete += SetMarker;
         }
 
         private void OnTriggerEnter(Collider other) {
@@ -117,7 +117,7 @@ namespace Game.Scripts.LiveObjects {
             }
             UIManager.Instance.UpdateInventoryDisplay(inventoryIcon);
             CompleteTask(zoneID);
-            onZoneInteractionComplete?.Invoke(this);
+            onInteractionComplete?.Invoke(this);
         }
 
         private void PerformAction() {
@@ -127,7 +127,7 @@ namespace Game.Scripts.LiveObjects {
 
             if (inventoryIcon != null)
                 UIManager.Instance.UpdateInventoryDisplay(inventoryIcon);
-            onZoneInteractionComplete?.Invoke(this);
+            onInteractionComplete?.Invoke(this);
         }
 
         private void PerformHoldAction() {
@@ -146,7 +146,7 @@ namespace Game.Scripts.LiveObjects {
         public void CompleteTask(int zoneID) {
             if (zoneID == this.zoneID) {
                 currentZoneID++;
-                onZoneInteractionComplete?.Invoke(this);
+                onInteractionComplete?.Invoke(this);
             }
         }
 
@@ -155,7 +155,7 @@ namespace Game.Scripts.LiveObjects {
                 actionPerformed = false;
         }
 
-        public void SetMarker(InteractableZone zone) {
+        public void SetMarker(InteractZone zone) {
             if (zoneID == currentZoneID)
                 marker.SetActive(true);
             else marker.SetActive(false);
@@ -169,7 +169,7 @@ namespace Game.Scripts.LiveObjects {
         }
 
         private void OnDisable() {
-            InteractableZone.onZoneInteractionComplete -= SetMarker;
+            InteractZone.onInteractionComplete -= SetMarker;
         }
     }
 }

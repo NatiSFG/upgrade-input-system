@@ -5,11 +5,11 @@ using Game.Scripts.Interfaces;
 
 namespace Game.Scripts.LiveObjects {
     public class Taxi : MonoBehaviour, IDestroyable {
-        [SerializeField] private GameObject onDestroyed;
+        [SerializeField] private GameObject wreckedTaxi;
 
         public void DestroyAction() {
-            onDestroyed.transform.SetPositionAndRotation(transform.position, transform.rotation);
-            onDestroyed.SetActive(true);
+            wreckedTaxi.transform.SetPositionAndRotation(transform.position, transform.rotation);
+            wreckedTaxi.SetActive(true);
             Destroy(this.gameObject);
         }
     }

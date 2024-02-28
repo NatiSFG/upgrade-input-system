@@ -7,19 +7,19 @@ using UnityEngine.SceneManagement;
 namespace Game.Scripts.LiveObjects {
     public class EndZone : MonoBehaviour {
         private void OnEnable() {
-            InteractableZone.onZoneInteractionComplete += ReachedEndZone;
+            InteractZone.onInteractionComplete += ReachedEndZone;
         }
 
         //rename ReachedEndZone
-        private void ReachedEndZone(InteractableZone zone) {
+        private void ReachedEndZone(InteractZone zone) {
             if (zone.GetZoneID() == 7) {
-                InteractableZone.CurrentZoneID = 0;
+                InteractZone.CurrentZoneID = 0;
                 SceneManager.LoadScene(0);
             }
         }
 
         private void OnDisable() {
-            InteractableZone.onZoneInteractionComplete -= ReachedEndZone;
+            InteractZone.onInteractionComplete -= ReachedEndZone;
         }
     }
 }

@@ -8,16 +8,16 @@ namespace Game.Scripts.LiveObjects {
         [SerializeField] private GameObject wholeCrate, brokenCrate;
         [SerializeField] private Rigidbody[] pieces;
         [SerializeField] private BoxCollider crateCollider;
-        [SerializeField] private InteractableZone interactableZone;
+        [SerializeField] private InteractZone interact;
 
         private bool isReadyToBreak = false;
         private List<Rigidbody> brakeOff = new List<Rigidbody>();
 
         private void OnEnable() {
-            InteractableZone.onZoneInteractionComplete += BreakCrate;
+            InteractZone.onInteractionComplete += BreakCrate;
         }
 
-        private void BreakCrate(InteractableZone zone) {
+        private void BreakCrate(InteractZone zone) {
             if (isReadyToBreak == false && brakeOff.Count > 0) {
                 wholeCrate.SetActive(false);
                 brokenCrate.SetActive(true);
@@ -31,7 +31,7 @@ namespace Game.Scripts.LiveObjects {
                 } else if (brakeOff.Count == 0) {
                     isReadyToBreak = false;
                     crateCollider.enabled = false;
-                    interactableZone.CompleteTask(6);
+                    interact.CompleteTask(6);
                     Debug.Log("Completely Busted");
                 }
             }
@@ -54,11 +54,11 @@ namespace Game.Scripts.LiveObjects {
                 yield return new WaitForEndOfFrame();
                 delayTimer += Time.deltaTime;
             }
-            interactableZone.ResetAction(6);
+            interact.ResetAction(6);
         }
 
         private void OnDisable() {
-            InteractableZone.onZoneInteractionComplete -= BreakCrate;
+            InteractZone.onInteractionComplete -= BreakCrate;
         }
     }
 }

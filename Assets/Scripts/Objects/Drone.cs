@@ -15,7 +15,7 @@ namespace Game.Scripts.LiveObjects {
         [SerializeField] private float speed = 5f;
         [SerializeField] private Animator propAnim;
         [SerializeField] private CinemachineVirtualCamera droneCamera;
-        [SerializeField] private InteractableZone interactZone;
+        [SerializeField] private InteractZone interact;
 
         private bool inFlightMode = false;
 
@@ -23,10 +23,10 @@ namespace Game.Scripts.LiveObjects {
         public static event Action onExitFlightmode;
 
         private void OnEnable() {
-            InteractableZone.onZoneInteractionComplete += EnterFlightMode;
+            InteractZone.onInteractionComplete += EnterFlightMode;
         }
 
-        private void EnterFlightMode(InteractableZone zone) {
+        private void EnterFlightMode(InteractZone zone) {
             //drone cutscene
             if (inFlightMode != true && zone.GetZoneID() == 4) {
                 propAnim.SetTrigger("StartProps");
@@ -34,7 +34,7 @@ namespace Game.Scripts.LiveObjects {
                 inFlightMode = true;
                 OnEnterFlightMode?.Invoke();
                 UIManager.Instance.DroneView(true);
-                interactZone.CompleteTask(4);
+                interact.CompleteTask(4);
             }
         }
 
@@ -92,7 +92,7 @@ namespace Game.Scripts.LiveObjects {
         }
 
         private void OnDisable() {
-            InteractableZone.onZoneInteractionComplete -= EnterFlightMode;
+            InteractZone.onInteractionComplete -= EnterFlightMode;
         }
     }
 }

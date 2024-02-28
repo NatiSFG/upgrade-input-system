@@ -16,7 +16,7 @@ namespace Game.Scripts.UI {
 
         [SerializeField] private Text interactZone;
         [SerializeField] private Image inventory;
-        [SerializeField] private RawImage droneCameraView;
+        [SerializeField] private RawImage droneCamera;
 
         private void Awake() {
             instance = this;
@@ -32,7 +32,7 @@ namespace Game.Scripts.UI {
         }
 
         public void DroneView(bool Active) {
-            droneCameraView.enabled = Active;
+            droneCamera.enabled = Active;
         }
     }
 }

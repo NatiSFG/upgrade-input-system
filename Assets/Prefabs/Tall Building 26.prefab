@@ -22,7 +22,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100004, guid: 9e016a2213f8449418fef3ced668fa0a, type: 3}
       propertyPath: m_Name
-      value: High RIse
+      value: Pillar
       objectReference: {fileID: 0}
     - target: {fileID: 100004, guid: 9e016a2213f8449418fef3ced668fa0a, type: 3}
       propertyPath: m_StaticEditorFlags

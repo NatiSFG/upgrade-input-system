@@ -4,12 +4,12 @@ using Cinemachine;
 
 namespace Game.Scripts.LiveObjects {
     public class Forklift : MonoBehaviour {
-        [SerializeField] private GameObject lift, steeringWheel, leftWheel, rightWheel, rearWheels;
+        [SerializeField] private GameObject lift, steeringWheel, leftTire, rightTire, backTires;
         [SerializeField] private Vector3 liftLowerLimit, liftUpperLimit;
         [SerializeField] private float speed = 5f, liftSpeed = 1f;
         [SerializeField] private CinemachineVirtualCamera forkliftCamera;
         [SerializeField] private GameObject driverModel;
-        [SerializeField] private InteractableZone interactableZone;
+        [SerializeField] private InteractZone interact;
 
         private bool inDriveMode = false;
 
@@ -17,17 +17,17 @@ namespace Game.Scripts.LiveObjects {
         public static event Action onDriveModeExited;
 
         private void OnEnable() {
-            InteractableZone.onZoneInteractionComplete += EnterDriveMode;
+            InteractZone.onInteractionComplete += EnterDriveMode;
         }
 
-        private void EnterDriveMode(InteractableZone zone) {
+        private void EnterDriveMode(InteractZone zone) {
             //Enter Forklift
             if (inDriveMode != true && zone.GetZoneID() == 5) {
                 inDriveMode = true;
                 forkliftCamera.Priority = 11;
                 onDriveModeEntered?.Invoke();
                 driverModel.SetActive(true);
-                interactableZone.CompleteTask(5);
+                interact.CompleteTask(5);
             }
         }
 
@@ -89,7 +89,7 @@ namespace Game.Scripts.LiveObjects {
         }
 
         private void OnDisable() {
-            InteractableZone.onZoneInteractionComplete -= EnterDriveMode;
+            InteractZone.onInteractionComplete -= EnterDriveMode;
         }
     }
 }
