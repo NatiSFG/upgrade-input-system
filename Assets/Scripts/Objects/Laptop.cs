@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Playables;
 using Cinemachine;
 
 namespace Game.Scripts.LiveObjects {
@@ -20,12 +18,12 @@ namespace Game.Scripts.LiveObjects {
         public static event Action onHackEnded;
 
         private void OnEnable() {
-            InteractZone.onHoldStarted += InteractableZone_onHoldStarted;
-            InteractZone.onHoldEnded += InteractableZone_onHoldEnded;
+            InteractZone.onHoldStarted += HackingInProgress;
+            InteractZone.onHoldEnded += FinishedHacking;
         }
 
         private void Update() {
-            if (isHacked == true) {
+            if (isHacked) {
                 if (Input.GetKeyDown(KeyCode.E)) {
                     var previous = activeCamera;
                     activeCamera++;
@@ -51,19 +49,19 @@ namespace Game.Scripts.LiveObjects {
             }
         }
 
-        private void InteractableZone_onHoldStarted(int zoneID) {
-            if (zoneID == 3 && isHacked == false) //Hacking terminal
-            {
+        private void HackingInProgress(int zoneID) {
+            //Hacking cameras
+            if (zoneID == 3 && isHacked == false) {
                 progressBar.gameObject.SetActive(true);
                 StartCoroutine(HackingRoutine());
                 onHackComplete?.Invoke();
             }
         }
 
-        private void InteractableZone_onHoldEnded(int zoneID) {
-            if (zoneID == 3) //Hacking terminal
-            {
-                if (isHacked == true)
+        private void FinishedHacking(int zoneID) {
+            //hacking cameras
+            if (zoneID == 3) {
+                if (isHacked)
                     return;
 
                 StopAllCoroutines();
@@ -73,27 +71,22 @@ namespace Game.Scripts.LiveObjects {
             }
         }
 
-
         IEnumerator HackingRoutine() {
             while (progressBar.value < 1) {
                 progressBar.value += Time.deltaTime / hackTime;
                 yield return new WaitForEndOfFrame();
             }
 
-            //successfully hacked
             isHacked = true;
             interact.CompleteTask(3);
 
-            //hide progress bar
             progressBar.gameObject.SetActive(false);
-
-            //enable Vcam1
             cameras[0].Priority = 11;
         }
 
         private void OnDisable() {
-            InteractZone.onHoldStarted -= InteractableZone_onHoldStarted;
-            InteractZone.onHoldEnded -= InteractableZone_onHoldEnded;
+            InteractZone.onHoldStarted -= HackingInProgress;
+            InteractZone.onHoldEnded -= FinishedHacking;
         }
     }
 }
