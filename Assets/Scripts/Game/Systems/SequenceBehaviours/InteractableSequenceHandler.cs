@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Game {
     public class InteractableSequenceHandler : MultiSequenceBehaviour {
@@ -15,6 +16,7 @@ namespace Game {
 
         [Space(20)]
         [SerializeField, ReadOnlyField] private Interactable currentInteractable;
+
         private GameObject vfx;
 
         private GameObject VFX {

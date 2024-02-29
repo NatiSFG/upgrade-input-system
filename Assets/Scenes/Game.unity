@@ -6938,7 +6938,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c913593ed8be2442b1f85de797cde43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventoryIcon: {fileID: 21300000, guid: 8e46bcb2f14d4d144b9e4a395b47efa2, type: 3}
   interactType: 1
   worldItems:
   - {fileID: 1395302416}
@@ -8629,7 +8628,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c913593ed8be2442b1f85de797cde43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventoryIcon: {fileID: 0}
   interactType: 1
   worldItems: []
   messageSuffix: detonate C4
@@ -10058,7 +10056,7 @@ GameObject:
   - component: {fileID: 663670464}
   - component: {fileID: 663670463}
   m_Layer: 5
-  m_Name: Inventory
+  m_Name: Inventory Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15220,7 +15218,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c913593ed8be2442b1f85de797cde43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventoryIcon: {fileID: 0}
   interactType: 1
   worldItems: []
   messageSuffix: restart the game
@@ -19380,7 +19377,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c913593ed8be2442b1f85de797cde43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventoryIcon: {fileID: 21300000, guid: 81dff3a1ca824714aae965897edd2351, type: 3}
   interactType: 0
   worldItems:
   - {fileID: 1347954083}
@@ -20355,7 +20351,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1499452540912398508, guid: 1d553f90302742946bbf45996165949c, type: 3}
       propertyPath: m_Name
-      value: Interact Zone - Forklift
+      value: Forklift
       objectReference: {fileID: 0}
     - target: {fileID: 5098578218743658244, guid: 1d553f90302742946bbf45996165949c, type: 3}
       propertyPath: m_Size.x
@@ -20459,7 +20455,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c913593ed8be2442b1f85de797cde43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventoryIcon: {fileID: 0}
   interactType: 1
   worldItems: []
   messageSuffix: drive forklift
@@ -20973,6 +20968,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0a84e7f23c3e504ab8378a41d6ba3ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inventoryIcon: {fileID: 21300000, guid: 8e46bcb2f14d4d144b9e4a395b47efa2, type: 3}
   worldItems:
   - gameObject: {fileID: 1395302416}
     action: 2
@@ -25461,7 +25457,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92138df738680304bb4615a3ce6ce6d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventory: {fileID: 663670463}
   droneCamera: {fileID: 1892110240}
 --- !u!114 &1625874018
 MonoBehaviour:
@@ -26967,6 +26962,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1723306708}
+  - component: {fileID: 1723306709}
   m_Layer: 0
   m_Name: 'Sequence 2: Detonate C4'
   m_TagString: Untagged
@@ -26989,6 +26985,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 862196504}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1723306709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1723306707}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0a84e7f23c3e504ab8378a41d6ba3ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inventoryIcon: {fileID: 0}
+  worldItems: []
 --- !u!1001 &1724843903
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27123,7 +27133,7 @@ GameObject:
   - component: {fileID: 1731336337}
   - component: {fileID: 1731336338}
   m_Layer: 0
-  m_Name: 'Sequence 0: Pickup Detonator'
+  m_Name: 'Sequence 0: Pickup C4 + Detonator'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27156,6 +27166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0a84e7f23c3e504ab8378a41d6ba3ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inventoryIcon: {fileID: 21300000, guid: 81dff3a1ca824714aae965897edd2351, type: 3}
   worldItems:
   - gameObject: {fileID: 1347954083}
     action: 1
@@ -29082,6 +29093,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1921734871}
   - {fileID: 2010036237}
   - {fileID: 862196504}
   m_Father: {fileID: 0}
@@ -29943,6 +29955,51 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 62b1fb061072740b38667cd3e45b278f, type: 3}
+--- !u!1 &1921734870
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1921734871}
+  - component: {fileID: 1921734872}
+  m_Layer: 0
+  m_Name: Inventory System
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1921734871
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1921734870}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1877191153}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1921734872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1921734870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70a52964dead7844594c8773d41e4e6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 663670463}
 --- !u!4 &1924335357 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 82e4525c3cbeb4088985a1906ff7ea25, type: 3}
@@ -30373,7 +30430,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c913593ed8be2442b1f85de797cde43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventoryIcon: {fileID: 0}
   interactType: 1
   worldItems: []
   messageSuffix: destroy crate
@@ -31417,7 +31473,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c913593ed8be2442b1f85de797cde43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventoryIcon: {fileID: 0}
   interactType: 2
   worldItems: []
   messageSuffix: hack cameras
@@ -36296,7 +36351,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c913593ed8be2442b1f85de797cde43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventoryIcon: {fileID: 0}
   interactType: 1
   worldItems: []
   messageSuffix: fly the drone

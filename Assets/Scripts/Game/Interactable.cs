@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace Game {
     public class Interactable : MonoBehaviour {
-        [SerializeField] private Sprite inventoryIcon;
         [SerializeField] private InteractType interactType;
 
         [Tooltip("The items in the world at this location that can be picked up.")]
@@ -19,7 +18,6 @@ namespace Game {
         private IInteractionSystem interactions;
         private ISequenceSystem sequences;
 
-        public Sprite InventoryIcon => inventoryIcon;
         public InteractType InteractType => interactType;
         public string MessageSuffix => messageSuffix;
 

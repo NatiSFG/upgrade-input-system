@@ -15,7 +15,7 @@ namespace Game {
             public GameObject gameObject;
             public ItemActionType action;
 
-            public void Perform() {
+            public void Perform(IItemInventory inventory) {
                 if (gameObject == null)
                     return;
 
@@ -30,13 +30,24 @@ namespace Game {
             }
         }
 
+        [SerializeField] private Sprite inventoryIcon;
+
         [Tooltip("The items in the world at this location that can be picked up.")]
         [SerializeField] private ItemInstruction[] worldItems = { };
 
+        private IItemInventory inventory;
+
+        private void OnEnable() {
+            inventory = ServiceLocator.Instance.GetSystem<IItemInventory>();
+        }
+
         public override void OnSequenceStarted() { }
         public override void OnSequenceEnded() {
+            if (inventory != null)
+                inventory.CurrentItemIcon = inventoryIcon;
+
             foreach (ItemInstruction i in worldItems)
-                i.Perform();
+                i.Perform(inventory);
         }
     }
 }

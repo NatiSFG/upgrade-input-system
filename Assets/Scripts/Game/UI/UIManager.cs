@@ -12,21 +12,10 @@ namespace Game.UI {
             }
         }
 
-        [SerializeField] private Image inventory;
         [SerializeField] private RawImage droneCamera;
 
         private void Awake() {
             instance = this;
-        }
-
-        public void UpdateInventoryDisplay(Sprite icon) {
-            if (icon != null) {
-                inventory.sprite = icon;
-                inventory.color = Color.white;
-            } else {
-                inventory.sprite = null;
-                inventory.color = Color.clear;
-            }
         }
 
         public void DroneView(bool Active) {
