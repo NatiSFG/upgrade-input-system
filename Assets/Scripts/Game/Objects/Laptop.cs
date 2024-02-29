@@ -17,79 +17,70 @@ namespace Game {
         public static event Action onHackComplete;
         public static event Action onHackEnded;
 
-        private void OnEnable() {
-            InteractZone.onHoldStarted += HackingInProgress;
-            InteractZone.onHoldEnded += FinishedHacking;
-        }
+        //TODO: Convert to use SequenceSystem, as a SequenceBehaviour or MultiSequenceBehaviour, for example.
+        //private void Update() {
+        //    if (isHacked) {
+        //        if (Input.GetKeyDown(KeyCode.E)) {
+        //            var previous = activeCamera;
+        //            activeCamera++;
 
-        private void OnDisable() {
-            InteractZone.onHoldStarted -= HackingInProgress;
-            InteractZone.onHoldEnded -= FinishedHacking;
-        }
+        //            if (activeCamera >= cameras.Length)
+        //                activeCamera = 0;
 
-        private void Update() {
-            if (isHacked) {
-                if (Input.GetKeyDown(KeyCode.E)) {
-                    var previous = activeCamera;
-                    activeCamera++;
+        //            cameras[activeCamera].Priority = 11;
+        //            cameras[previous].Priority = 9;
+        //        }
 
-                    if (activeCamera >= cameras.Length)
-                        activeCamera = 0;
+        //        if (Input.GetKeyDown(KeyCode.Escape)) {
+        //            isHacked = false;
+        //            Debug.LogWarning(nameof(onHackEnded));
+        //            onHackEnded?.Invoke();
+        //            ResetCameras();
+        //        }
+        //    }
+        //}
 
-                    cameras[activeCamera].Priority = 11;
-                    cameras[previous].Priority = 9;
-                }
+        //private void ResetCameras() {
+        //    foreach (CinemachineVirtualCamera c in cameras)
+        //        c.Priority = 9;
+        //}
 
-                if (Input.GetKeyDown(KeyCode.Escape)) {
-                    isHacked = false;
-                    Debug.LogWarning(nameof(onHackEnded));
-                    onHackEnded?.Invoke();
-                    ResetCameras();
-                }
-            }
-        }
+        //private void HackingInProgress(int zoneID) {
+        //    //Hacking cameras
+        //    if (zoneID == 3 && isHacked == false) {
+        //        progressBar.gameObject.SetActive(true);
+        //        StartCoroutine(HackingRoutine());
+        //        Debug.LogWarning(nameof(onHackComplete));
+        //        onHackComplete?.Invoke();
+        //    }
+        //}
 
-        private void ResetCameras() {
-            foreach (CinemachineVirtualCamera c in cameras)
-                c.Priority = 9;
-        }
+        //private void FinishedHacking(int zoneID) {
+        //    //hacking cameras
+        //    if (zoneID == 3) {
+        //        if (isHacked)
+        //            return;
 
-        private void HackingInProgress(int zoneID) {
-            //Hacking cameras
-            if (zoneID == 3 && isHacked == false) {
-                progressBar.gameObject.SetActive(true);
-                StartCoroutine(HackingRoutine());
-                Debug.LogWarning(nameof(onHackComplete));
-                onHackComplete?.Invoke();
-            }
-        }
+        //        StopAllCoroutines();
+        //        progressBar.gameObject.SetActive(false);
+        //        progressBar.value = 0;
+        //        Debug.LogWarning(nameof(onHackEnded));
+        //        onHackEnded?.Invoke();
+        //    }
+        //}
 
-        private void FinishedHacking(int zoneID) {
-            //hacking cameras
-            if (zoneID == 3) {
-                if (isHacked)
-                    return;
+        //private IEnumerator HackingRoutine() {
+        //    YieldInstruction wait = new WaitForEndOfFrame();
+        //    while (progressBar.value < 1) {
+        //        progressBar.value += Time.deltaTime / hackTime;
+        //        yield return wait;
+        //    }
 
-                StopAllCoroutines();
-                progressBar.gameObject.SetActive(false);
-                progressBar.value = 0;
-                Debug.LogWarning(nameof(onHackEnded));
-                onHackEnded?.Invoke();
-            }
-        }
+        //    isHacked = true;
+        //    interact.CompleteTask(3);
 
-        private IEnumerator HackingRoutine() {
-            YieldInstruction wait = new WaitForEndOfFrame();
-            while (progressBar.value < 1) {
-                progressBar.value += Time.deltaTime / hackTime;
-                yield return wait;
-            }
-
-            isHacked = true;
-            interact.CompleteTask(3);
-
-            progressBar.gameObject.SetActive(false);
-            cameras[0].Priority = 11;
-        }
+        //    progressBar.gameObject.SetActive(false);
+        //    cameras[0].Priority = 11;
+        //}
     }
 }

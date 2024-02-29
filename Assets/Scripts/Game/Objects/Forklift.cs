@@ -20,86 +20,87 @@ namespace Game {
         [SerializeField] private GameObject driverModel;
         [SerializeField] private InteractZone interact;
 
-        private bool inDriveMode = false;
+        //TODO: Convert to use SequenceSystem, as a SequenceBehaviour or MultiSequenceBehaviour, for example.
+        //private bool inDriveMode = false;
 
-        public static event Action onDriveModeEntered;
-        public static event Action onDriveModeExited;
+        //public static event Action onDriveModeEntered;
+        //public static event Action onDriveModeExited;
 
-        private void OnEnable() {
-            InteractZone.onInteractionComplete += EnterDriveMode;
-        }
+        //private void OnEnable() {
+        //    InteractZone.onInteractionComplete += EnterDriveMode;
+        //}
 
-        private void OnDisable() {
-            InteractZone.onInteractionComplete -= EnterDriveMode;
-        }
+        //private void OnDisable() {
+        //    InteractZone.onInteractionComplete -= EnterDriveMode;
+        //}
 
-        private void Update() {
-            if (inDriveMode) {
-                LiftControls();
-                CalcutateMovement();
-                if (Input.GetKeyDown(KeyCode.Escape))
-                    ExitDriveMode();
-            }
-        }
+        //private void Update() {
+        //    if (inDriveMode) {
+        //        LiftControls();
+        //        CalcutateMovement();
+        //        if (Input.GetKeyDown(KeyCode.Escape))
+        //            ExitDriveMode();
+        //    }
+        //}
 
-        private void EnterDriveMode(InteractZone zone) {
-            //Enter Forklift
-            if (!inDriveMode && zone.ZoneID == 5) {
-                inDriveMode = true;
-                forkliftCamera.Priority = 11;
-                onDriveModeEntered?.Invoke();
-                driverModel.SetActive(true);
-                interact.CompleteTask(5);
-            }
-        }
+        //private void EnterDriveMode(InteractZone zone) {
+        //    //Enter Forklift
+        //    if (!inDriveMode && zone.ZoneID == 5) {
+        //        inDriveMode = true;
+        //        forkliftCamera.Priority = 11;
+        //        onDriveModeEntered?.Invoke();
+        //        driverModel.SetActive(true);
+        //        interact.CompleteTask(5);
+        //    }
+        //}
 
-        private void ExitDriveMode() {
-            inDriveMode = false;
-            forkliftCamera.Priority = 9;
-            driverModel.SetActive(false);
-            onDriveModeExited?.Invoke();
-        }
+        //private void ExitDriveMode() {
+        //    inDriveMode = false;
+        //    forkliftCamera.Priority = 9;
+        //    driverModel.SetActive(false);
+        //    onDriveModeExited?.Invoke();
+        //}
 
-        private void CalcutateMovement() {
-            float h = Input.GetAxisRaw("Horizontal");
-            float v = Input.GetAxisRaw("Vertical");
-            Vector3 direction = new Vector3(0, 0, v);
-            Vector3 velocity = direction * speed;
+        //private void CalcutateMovement() {
+        //    float h = Input.GetAxisRaw("Horizontal");
+        //    float v = Input.GetAxisRaw("Vertical");
+        //    Vector3 direction = new Vector3(0, 0, v);
+        //    Vector3 velocity = direction * speed;
 
-            transform.Translate(velocity * Time.deltaTime);
+        //    transform.Translate(velocity * Time.deltaTime);
 
-            if (Mathf.Abs(v) > 0) {
-                Vector3 tempRot = transform.rotation.eulerAngles;
-                tempRot.y += h * speed / 2;
-                transform.rotation = Quaternion.Euler(tempRot);
-            }
-        }
+        //    if (Mathf.Abs(v) > 0) {
+        //        Vector3 tempRot = transform.rotation.eulerAngles;
+        //        tempRot.y += h * speed / 2;
+        //        transform.rotation = Quaternion.Euler(tempRot);
+        //    }
+        //}
 
-        private void LiftControls() {
-            if (Input.GetKey(KeyCode.R))
-                LiftUpRoutine();
-            else if (Input.GetKey(KeyCode.T))
-                LiftDownRoutine();
-        }
+        //private void LiftControls() {
+        //    if (Input.GetKey(KeyCode.R))
+        //        LiftUpRoutine();
+        //    else if (Input.GetKey(KeyCode.T))
+        //        LiftDownRoutine();
+        //}
 
-        private void LiftUpRoutine() {
-            Vector3 localPos = lift.transform.localPosition;
+        //private void LiftUpRoutine() {
+        //    Vector3 localPos = lift.transform.localPosition;
 
-            if (localPos.y < liftUpperLimit.y) {
-                localPos.y += Time.deltaTime * liftSpeed;
-                lift.transform.localPosition = localPos;
-            } else if (localPos.y >= liftUpperLimit.y)
-                lift.transform.localPosition = liftUpperLimit;
-        }
+        //    if (localPos.y < liftUpperLimit.y) {
+        //        localPos.y += Time.deltaTime * liftSpeed;
+        //        lift.transform.localPosition = localPos;
+        //    } else if (localPos.y >= liftUpperLimit.y)
+        //        lift.transform.localPosition = liftUpperLimit;
+        //}
 
-        private void LiftDownRoutine() {
-            Vector3 localPos = lift.transform.localPosition;
+        //private void LiftDownRoutine() {
+        //    Vector3 localPos = lift.transform.localPosition;
 
-            if (localPos.y > liftLowerLimit.y) {
-                localPos.y -= Time.deltaTime * liftSpeed;
-                lift.transform.localPosition = localPos;
-            } else if (localPos.y <= liftUpperLimit.y)
-                lift.transform.localPosition = liftLowerLimit;
-        }
+        //    if (localPos.y > liftLowerLimit.y) {
+        //        localPos.y -= Time.deltaTime * liftSpeed;
+        //        lift.transform.localPosition = localPos;
+        //    } else if (localPos.y <= liftUpperLimit.y)
+        //        lift.transform.localPosition = liftLowerLimit;
+        //}
     }
 }

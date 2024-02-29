@@ -26,6 +26,7 @@ namespace Game {
         private InputAction rotate;
         private Animator anim;
         private int speedId;
+        private Vector3 velocity;
 
         private void Start() {
             anim = GetComponentInChildren<Animator>();
@@ -45,25 +46,27 @@ namespace Game {
         }
 
         private void OnEnable() {
-            InteractZone.onInteractionComplete += ShowDetonatorOrExplode;
-            Laptop.onHackComplete += ReleasePlayerControl;
-            Laptop.onHackEnded += ReturnPlayerControl;
-            Forklift.onDriveModeEntered += ReleasePlayerControl;
-            Forklift.onDriveModeExited += ReturnPlayerControl;
-            Forklift.onDriveModeEntered += HidePlayer;
-            Drone.onEnterFlightMode += ReleasePlayerControl;
-            Drone.onExitFlightmode += ReturnPlayerControl;
+            //TODO: Convert to use SequenceSystem, as a SequenceBehaviour or MultiSequenceBehaviour, for example.
+            //InteractZone.onInteractionComplete += ShowDetonatorOrExplode;
+            //Laptop.onHackComplete += ReleasePlayerControl;
+            //Laptop.onHackEnded += ReturnPlayerControl;
+            //Forklift.onDriveModeEntered += ReleasePlayerControl;
+            //Forklift.onDriveModeExited += ReturnPlayerControl;
+            //Forklift.onDriveModeEntered += HidePlayer;
+            //Drone.onEnterFlightMode += ReleasePlayerControl;
+            //Drone.onExitFlightmode += ReturnPlayerControl;
         }
 
         private void OnDisable() {
-            InteractZone.onInteractionComplete -= ShowDetonatorOrExplode;
-            Laptop.onHackComplete -= ReleasePlayerControl;
-            Laptop.onHackEnded -= ReturnPlayerControl;
-            Forklift.onDriveModeEntered -= ReleasePlayerControl;
-            Forklift.onDriveModeExited -= ReturnPlayerControl;
-            Forklift.onDriveModeEntered -= HidePlayer;
-            Drone.onEnterFlightMode -= ReleasePlayerControl;
-            Drone.onExitFlightmode -= ReturnPlayerControl;
+            //TODO: Convert to use SequenceSystem, as a SequenceBehaviour or MultiSequenceBehaviour, for example.
+            //InteractZone.onInteractionComplete -= ShowDetonatorOrExplode;
+            //Laptop.onHackComplete -= ReleasePlayerControl;
+            //Laptop.onHackEnded -= ReturnPlayerControl;
+            //Forklift.onDriveModeEntered -= ReleasePlayerControl;
+            //Forklift.onDriveModeExited -= ReturnPlayerControl;
+            //Forklift.onDriveModeEntered -= HidePlayer;
+            //Drone.onEnterFlightMode -= ReleasePlayerControl;
+            //Drone.onExitFlightmode -= ReturnPlayerControl;
         }
 
         private void Update() {
@@ -74,8 +77,13 @@ namespace Game {
             Vector2 moveInput = move.ReadValue<Vector2>();
             currentWalkSpeed = (moveInput.magnitude > 0) ? walkSpeed : 0;
 
-            Vector3 velocity = currentWalkSpeed * transform.forward * moveInput.y;
-            velocity.y = 0;
+            Vector3 prevVelocity = velocity;
+            velocity = currentWalkSpeed * transform.forward * moveInput.y;
+
+            if (controller.isGrounded)
+                velocity.y = 0;
+            else
+                velocity.y = prevVelocity.y + Physics.gravity.y * Time.deltaTime;
 
             controller.Move(velocity * Time.deltaTime);
 
@@ -89,14 +97,15 @@ namespace Game {
         }
 
         private void ShowDetonatorOrExplode(InteractZone zone) {
-            switch (zone.ZoneID) {
-                case 1: //place c4
-                    detonator.Show();
-                    break;
-                case 2: //Trigger Explosion
-                    TriggerExplosive();
-                    break;
-            }
+            //TODO: Convert to use SequenceSystem, as a SequenceBehaviour or MultiSequenceBehaviour, for example.
+            //switch (zone.ZoneID) {
+            //    case 1: //place c4
+            //        detonator.Show();
+            //        break;
+            //    case 2: //Trigger Explosion
+            //        TriggerExplosive();
+            //        break;
+            //}
         }
 
         private void ReleasePlayerControl() {
@@ -113,7 +122,7 @@ namespace Game {
         }
 
         private void TriggerExplosive() {
-            detonator.TriggerExplosion();
+            //detonator.TriggerExplosion();
         }
     }
 }
