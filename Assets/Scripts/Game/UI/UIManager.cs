@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game.Scripts.UI {
+namespace Game.UI {
     public class UIManager : MonoBehaviour {
         #region Singleton
         private static UIManager instance;

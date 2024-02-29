@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Game.Scripts.LiveObjects {
+namespace Game {
     public class EndZone : MonoBehaviour {
         private void OnEnable() {
             InteractZone.onInteractionComplete += ReachedEndZone;

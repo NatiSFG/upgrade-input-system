@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Game.Scripts.LiveObjects {
+namespace Game {
     public class Detonator : MonoBehaviour {
         [SerializeField] private C4 c4;
         [SerializeField] private InteractZone[] interacts;

@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
 using Cinemachine;
-using Game.Scripts.LiveObjects;
 
-namespace Game.Scripts.Player {
+namespace Game {
     [RequireComponent(typeof(CharacterController))]
     public class Player : MonoBehaviour {
         [SerializeField] private Detonator detonator;
@@ -26,20 +25,26 @@ namespace Game.Scripts.Player {
         private InputAction move;
         private InputAction rotate;
         private Animator anim;
-        private bool canWalk = true;
         private int speedId;
 
         private void Start() {
             anim = GetComponentInChildren<Animator>();
             speedId = Animator.StringToHash("Speed");
-        }
 
-        private void OnEnable() {
             playerMovement = sharedPlayerMovement.FindActionMap(actionMapName).Clone();
             playerMovement.Enable();
             move = playerMovement[sharedMove.action.name];
             rotate = playerMovement[sharedRotate.action.name];
+        }
 
+        private void OnDestroy() {
+            playerMovement.Dispose();
+            playerMovement = null;
+            move = null;
+            rotate = null;
+        }
+
+        private void OnEnable() {
             InteractZone.onInteractionComplete += ShowDetonatorOrExplode;
             Laptop.onHackComplete += ReleasePlayerControl;
             Laptop.onHackEnded += ReturnPlayerControl;
@@ -51,11 +56,6 @@ namespace Game.Scripts.Player {
         }
 
         private void OnDisable() {
-            playerMovement.Dispose();
-            playerMovement = null;
-            move = null;
-            rotate = null;
-
             InteractZone.onInteractionComplete -= ShowDetonatorOrExplode;
             Laptop.onHackComplete -= ReleasePlayerControl;
             Laptop.onHackEnded -= ReturnPlayerControl;
@@ -67,8 +67,7 @@ namespace Game.Scripts.Player {
         }
 
         private void Update() {
-            if (canWalk)
-                CalcutateMovement();
+            CalcutateMovement();
         }
 
         private void CalcutateMovement() {
@@ -101,13 +100,11 @@ namespace Game.Scripts.Player {
         }
 
         private void ReleasePlayerControl() {
-            canWalk = false;
             followCamera.Priority = 9;
         }
 
         private void ReturnPlayerControl() {
             model.SetActive(true);
-            canWalk = true;
             followCamera.Priority = 10;
         }
 

@@ -1,8 +1,8 @@
 ﻿using System;
 using UnityEngine;
-using Game.Scripts.UI;
+using Game.UI; //TODO: UI should listen and reach into the game state so it knows what to show. NOT the other way around.
 
-namespace Game.Scripts.LiveObjects {
+namespace Game {
     public class InteractZone : MonoBehaviour {
         private enum ZoneType {
             Collectable,

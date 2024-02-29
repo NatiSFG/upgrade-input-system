@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
-using Game.Scripts.Interfaces;
 
-namespace Game.Scripts.LiveObjects {
+namespace Game {
     public class C4 : MonoBehaviour {
         [SerializeField] private GameObject explosionPrefab;
 

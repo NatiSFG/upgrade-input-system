@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Cinemachine;
 
-namespace Game.Scripts.LiveObjects {
+namespace Game {
     public class Laptop : MonoBehaviour {
         [SerializeField] private Slider progressBar;
         [SerializeField] private int hackTime = 5;

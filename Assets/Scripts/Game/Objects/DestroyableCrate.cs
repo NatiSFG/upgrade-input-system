@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Game.Scripts.LiveObjects {
+namespace Game {
     public class Crate : MonoBehaviour {
         [SerializeField] private float punchDelay;
         [SerializeField] private GameObject wholeCrate, brokenCrate;

@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using Cinemachine;
 
-namespace Game.Scripts.LiveObjects {
+namespace Game {
     public class Forklift : MonoBehaviour {
         [SerializeField] private GameObject lift;
         [SerializeField] private GameObject steeringWheel;

@@ -1,16 +1,22 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Cinemachine;
-using Game.Scripts.UI;
+using Game.UI;
 
-namespace Game.Scripts.LiveObjects {
+namespace Game {
     public class Drone : MonoBehaviour {
         private enum Tilt {
-            NoTilt, Forward, Back, Left, Right
+            NoTilt,
+            Forward,
+            Back,
+            Left,
+            Right
         }
 
-        [SerializeField] private Rigidbody rb;
-        [SerializeField] private float speed = 5f;
+        [FormerlySerializedAs("rb")]
+        [SerializeField] private new Rigidbody rigidbody;
+        [SerializeField] private float speed = 5;
         [SerializeField] private Animator propAnim;
         [SerializeField] private CinemachineVirtualCamera droneCamera;
         [SerializeField] private InteractZone interact;
@@ -60,19 +66,19 @@ namespace Game.Scripts.LiveObjects {
         }
 
         private void FixedUpdate() {
-            rb.AddForce(transform.up * (9.81f), ForceMode.Acceleration);
+            rigidbody.AddForce(transform.up * (9.81f), ForceMode.Acceleration);
             if (inFlightMode)
                 UpAndDownMovement();
         }
 
         private void Rotate() {
             if (Input.GetKey(KeyCode.LeftArrow)) {
-                var tempRot = transform.localRotation.eulerAngles;
+                Vector3 tempRot = transform.localRotation.eulerAngles;
                 tempRot.y -= speed / 3;
                 transform.localRotation = Quaternion.Euler(tempRot);
             }
             if (Input.GetKey(KeyCode.RightArrow)) {
-                var tempRot = transform.localRotation.eulerAngles;
+                Vector3 tempRot = transform.localRotation.eulerAngles;
                 tempRot.y += speed / 3;
                 transform.localRotation = Quaternion.Euler(tempRot);
             }
@@ -80,9 +86,9 @@ namespace Game.Scripts.LiveObjects {
 
         private void UpAndDownMovement() {
             if (Input.GetKey(KeyCode.F))
-                rb.AddForce(transform.up * speed, ForceMode.Acceleration);
+                rigidbody.AddForce(transform.up * speed, ForceMode.Acceleration);
             if (Input.GetKey(KeyCode.V))
-                rb.AddForce(-transform.up * speed, ForceMode.Acceleration);
+                rigidbody.AddForce(-transform.up * speed, ForceMode.Acceleration);
         }
 
         private void CalculateTilt() {
