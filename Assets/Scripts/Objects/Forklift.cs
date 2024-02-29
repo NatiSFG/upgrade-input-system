@@ -4,9 +4,18 @@ using Cinemachine;
 
 namespace Game.Scripts.LiveObjects {
     public class Forklift : MonoBehaviour {
-        [SerializeField] private GameObject lift, steeringWheel, leftTire, rightTire, backTires;
-        [SerializeField] private Vector3 liftLowerLimit, liftUpperLimit;
-        [SerializeField] private float speed = 5f, liftSpeed = 1f;
+        [SerializeField] private GameObject lift;
+        [SerializeField] private GameObject steeringWheel;
+        [SerializeField] private GameObject leftTire;
+        [SerializeField] private GameObject rightTire;
+        [SerializeField] private GameObject backTires;
+
+        [SerializeField] private Vector3 liftLowerLimit;
+        [SerializeField] private Vector3 liftUpperLimit;
+
+        [SerializeField] private float speed = 5;
+        [SerializeField] private float liftSpeed = 5;
+
         [SerializeField] private CinemachineVirtualCamera forkliftCamera;
         [SerializeField] private GameObject driverModel;
         [SerializeField] private InteractZone interact;
@@ -20,9 +29,22 @@ namespace Game.Scripts.LiveObjects {
             InteractZone.onInteractionComplete += EnterDriveMode;
         }
 
+        private void OnDisable() {
+            InteractZone.onInteractionComplete -= EnterDriveMode;
+        }
+
+        private void Update() {
+            if (inDriveMode) {
+                LiftControls();
+                CalcutateMovement();
+                if (Input.GetKeyDown(KeyCode.Escape))
+                    ExitDriveMode();
+            }
+        }
+
         private void EnterDriveMode(InteractZone zone) {
             //Enter Forklift
-            if (inDriveMode != true && zone.GetZoneID() == 5) {
+            if (!inDriveMode && zone.GetZoneID() == 5) {
                 inDriveMode = true;
                 forkliftCamera.Priority = 11;
                 onDriveModeEntered?.Invoke();
@@ -36,28 +58,18 @@ namespace Game.Scripts.LiveObjects {
             forkliftCamera.Priority = 9;
             driverModel.SetActive(false);
             onDriveModeExited?.Invoke();
-
-        }
-
-        private void Update() {
-            if (inDriveMode == true) {
-                LiftControls();
-                CalcutateMovement();
-                if (Input.GetKeyDown(KeyCode.Escape))
-                    ExitDriveMode();
-            }
         }
 
         private void CalcutateMovement() {
             float h = Input.GetAxisRaw("Horizontal");
             float v = Input.GetAxisRaw("Vertical");
-            var direction = new Vector3(0, 0, v);
-            var velocity = direction * speed;
+            Vector3 direction = new Vector3(0, 0, v);
+            Vector3 velocity = direction * speed;
 
             transform.Translate(velocity * Time.deltaTime);
 
             if (Mathf.Abs(v) > 0) {
-                var tempRot = transform.rotation.eulerAngles;
+                Vector3 tempRot = transform.rotation.eulerAngles;
                 tempRot.y += h * speed / 2;
                 transform.rotation = Quaternion.Euler(tempRot);
             }
@@ -71,25 +83,23 @@ namespace Game.Scripts.LiveObjects {
         }
 
         private void LiftUpRoutine() {
-            if (lift.transform.localPosition.y < liftUpperLimit.y) {
-                Vector3 tempPos = lift.transform.localPosition;
-                tempPos.y += Time.deltaTime * liftSpeed;
-                lift.transform.localPosition = new Vector3(tempPos.x, tempPos.y, tempPos.z);
-            } else if (lift.transform.localPosition.y >= liftUpperLimit.y)
+            Vector3 localPos = lift.transform.localPosition;
+
+            if (localPos.y < liftUpperLimit.y) {
+                localPos.y += Time.deltaTime * liftSpeed;
+                lift.transform.localPosition = localPos;
+            } else if (localPos.y >= liftUpperLimit.y)
                 lift.transform.localPosition = liftUpperLimit;
         }
 
         private void LiftDownRoutine() {
-            if (lift.transform.localPosition.y > liftLowerLimit.y) {
-                Vector3 tempPos = lift.transform.localPosition;
-                tempPos.y -= Time.deltaTime * liftSpeed;
-                lift.transform.localPosition = new Vector3(tempPos.x, tempPos.y, tempPos.z);
-            } else if (lift.transform.localPosition.y <= liftUpperLimit.y)
-                lift.transform.localPosition = liftLowerLimit;
-        }
+            Vector3 localPos = lift.transform.localPosition;
 
-        private void OnDisable() {
-            InteractZone.onInteractionComplete -= EnterDriveMode;
+            if (localPos.y > liftLowerLimit.y) {
+                localPos.y -= Time.deltaTime * liftSpeed;
+                lift.transform.localPosition = localPos;
+            } else if (localPos.y <= liftUpperLimit.y)
+                lift.transform.localPosition = liftLowerLimit;
         }
     }
 }

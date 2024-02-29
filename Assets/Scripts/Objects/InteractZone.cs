@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Game.Scripts.UI;
-
 
 namespace Game.Scripts.LiveObjects {
     public class InteractZone : MonoBehaviour {
@@ -22,7 +19,10 @@ namespace Game.Scripts.LiveObjects {
         [SerializeField] private KeyCode zoneInputKey;
         [SerializeField] private KeyState keyState;
         [SerializeField] private int zoneID, requiredID;
-        [SerializeField] [Tooltip("Press the (---) Key to .....")] private string displayMessage;
+
+        [Tooltip("Press the (---) Key to .....")]
+        [SerializeField] private string displayMessage;
+
         [SerializeField] private GameObject[] zoneItems;
         [SerializeField] private Sprite inventoryIcon;
         [SerializeField] private GameObject marker;
@@ -41,6 +41,10 @@ namespace Game.Scripts.LiveObjects {
 
         private void OnEnable() {
             InteractZone.onInteractionComplete += SetMarker;
+        }
+
+        private void OnDisable() {
+            InteractZone.onInteractionComplete -= SetMarker;
         }
 
         private void OnTriggerEnter(Collider other) {
@@ -75,6 +79,13 @@ namespace Game.Scripts.LiveObjects {
                         } else UIManager.Instance.DisplayInteractableZoneMessage(true, $"Hold the {zoneInputKey.ToString()} key to perform action");
                         break;
                 }
+            }
+        }
+
+        private void OnTriggerExit(Collider other) {
+            if (other.CompareTag("Player")) {
+                inZone = false;
+                UIManager.Instance.DisplayInteractableZoneMessage(false);
             }
         }
 
@@ -160,17 +171,6 @@ namespace Game.Scripts.LiveObjects {
             if (zoneID == currentZoneID)
                 marker.SetActive(true);
             else marker.SetActive(false);
-        }
-
-        private void OnTriggerExit(Collider other) {
-            if (other.CompareTag("Player")) {
-                inZone = false;
-                UIManager.Instance.DisplayInteractableZoneMessage(false);
-            }
-        }
-
-        private void OnDisable() {
-            InteractZone.onInteractionComplete -= SetMarker;
         }
     }
 }

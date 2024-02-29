@@ -13,8 +13,16 @@ namespace Game.Scripts.LiveObjects {
         private bool isReadyToBreak = false;
         private List<Rigidbody> brakeOff = new List<Rigidbody>();
 
+        private void Start() {
+            brakeOff.AddRange(pieces);
+        }
+
         private void OnEnable() {
             InteractZone.onInteractionComplete += BreakCrate;
+        }
+
+        private void OnDisable() {
+            InteractZone.onInteractionComplete -= BreakCrate;
         }
 
         private void BreakCrate(InteractZone zone) {
@@ -37,10 +45,6 @@ namespace Game.Scripts.LiveObjects {
             }
         }
 
-        private void Start() {
-            brakeOff.AddRange(pieces);
-        }
-
         public void BreakPart() {
             int rng = Random.Range(0, brakeOff.Count);
             brakeOff[rng].constraints = RigidbodyConstraints.None;
@@ -48,17 +52,13 @@ namespace Game.Scripts.LiveObjects {
             brakeOff.Remove(brakeOff[rng]);
         }
 
-        IEnumerator PunchDelay() {
+        private IEnumerator PunchDelay() {
             float delayTimer = 0;
             while (delayTimer < punchDelay) {
                 yield return new WaitForEndOfFrame();
                 delayTimer += Time.deltaTime;
             }
             interact.ResetAction(6);
-        }
-
-        private void OnDisable() {
-            InteractZone.onInteractionComplete -= BreakCrate;
         }
     }
 }

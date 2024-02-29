@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Game.Scripts.LiveObjects {
     public class Detonator : MonoBehaviour {
@@ -10,12 +8,16 @@ namespace Game.Scripts.LiveObjects {
         private bool c4Placed;
         private new MeshRenderer renderer;
 
+        private void Start() {
+            renderer = GetComponent<MeshRenderer>();
+        }
+
         private void OnEnable() {
             InteractZone.onInteractionComplete += PlaceC4;
         }
 
-        private void Start() {
-            renderer = GetComponent<MeshRenderer>();
+        private void OnDisable() {
+            InteractZone.onInteractionComplete -= PlaceC4;
         }
 
         private void PlaceC4(InteractZone zone) {
@@ -35,7 +37,7 @@ namespace Game.Scripts.LiveObjects {
             Destroy(this.gameObject);
         }
 
-        void PlaceC4(Transform target) {
+        private void PlaceC4(Transform target) {
             c4.Place(target);
             c4.gameObject.SetActive(true);
             c4Placed = true;
@@ -45,10 +47,6 @@ namespace Game.Scripts.LiveObjects {
         public void Show() {
             if (renderer != null)
                 renderer.enabled = true;
-        }
-
-        private void Ondisable() {
-            InteractZone.onInteractionComplete -= PlaceC4;
         }
     }
 }
