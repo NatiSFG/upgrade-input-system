@@ -53,9 +53,10 @@ namespace Game.Scripts.LiveObjects {
         }
 
         private IEnumerator PunchDelay() {
+            YieldInstruction wait = new WaitForEndOfFrame();
             float delayTimer = 0;
             while (delayTimer < punchDelay) {
-                yield return new WaitForEndOfFrame();
+                yield return wait;
                 delayTimer += Time.deltaTime;
             }
             interact.ResetAction(6);

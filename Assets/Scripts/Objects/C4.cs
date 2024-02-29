@@ -1,30 +1,29 @@
-﻿using Game.Scripts.Interfaces;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using Game.Scripts.Interfaces;
 
 namespace Game.Scripts.LiveObjects {
     public class C4 : MonoBehaviour {
         [SerializeField] private GameObject explosionPrefab;
-        
+
         private Collider[] hits = new Collider[5];
 
         public void Explode() {
-            Instantiate(explosionPrefab, transform.position, Quaternion.identity);
-            var count = Physics.OverlapSphereNonAlloc(transform.position, 1, hits);
+            Vector3 pos = transform.position;
+            GameObject.Instantiate(explosionPrefab, pos, Quaternion.identity);
+            int count = Physics.OverlapSphereNonAlloc(pos, 1, hits);
 
             if (count > 0) {
-                foreach (var obj in hits) {
-                    if (obj != null && obj.TryGetComponent<IDestroyable>(out IDestroyable destroyable))
+                foreach (Collider obj in hits) {
+                    if (obj != null && obj.TryGetComponent(out IDestroyable destroyable))
                         destroyable.DestroyAction();
                 }
             }
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
 
         public void Place(Transform target) {
-            this.transform.SetPositionAndRotation(target.position, target.rotation);
-            this.transform.parent = null;
+            transform.SetPositionAndRotation(target.position, target.rotation);
+            transform.parent = null;
         }
     }
 }

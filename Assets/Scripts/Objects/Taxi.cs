@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Game.Scripts.Interfaces;
 
 namespace Game.Scripts.LiveObjects {
@@ -10,7 +8,7 @@ namespace Game.Scripts.LiveObjects {
         public void DestroyAction() {
             wreckedTaxi.transform.SetPositionAndRotation(transform.position, transform.rotation);
             wreckedTaxi.SetActive(true);
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
     }
 }
