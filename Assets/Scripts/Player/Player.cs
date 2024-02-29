@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using Game.Scripts.LiveObjects;
-using Cinemachine;
 using UnityEngine.InputSystem;
+using Cinemachine;
+using Game.Scripts.LiveObjects;
 
 namespace Game.Scripts.Player {
     [RequireComponent(typeof(CharacterController))]
@@ -9,24 +9,37 @@ namespace Game.Scripts.Player {
         [SerializeField] private Detonator detonator;
         [SerializeField] private CinemachineVirtualCamera followCamera;
         [SerializeField] private GameObject model;
+        [SerializeField] private CharacterController controller;
+
         [Header("Movement")]
         [SerializeField] private float currentWalkSpeed;
         [SerializeField] private float walkSpeed = 2.5f;
         [SerializeField] private float rotateSpeed = 1;
 
+        [Header("Input")]
+        [SerializeField] private InputActionAsset sharedPlayerMovement;
+        [SerializeField] private string actionMapName = "Player Movement";
+        [SerializeField] private InputActionReference sharedMove;
+        [SerializeField] private InputActionReference sharedRotate;
 
-        private PlayerInputActions input;
+        private InputActionMap playerMovement;
+        private InputAction move;
+        private InputAction rotate;
         private Animator anim;
         private bool canWalk = true;
+        private int speedId;
 
         private void Start() {
-            input = new PlayerInputActions();
-            input.PlayerMovement.Enable();
-
             anim = GetComponentInChildren<Animator>();
+            speedId = Animator.StringToHash("Speed");
         }
 
         private void OnEnable() {
+            playerMovement = sharedPlayerMovement.FindActionMap(actionMapName).Clone();
+            playerMovement.Enable();
+            move = playerMovement[sharedMove.action.name];
+            rotate = playerMovement[sharedRotate.action.name];
+
             InteractZone.onInteractionComplete += ShowDetonatorOrExplode;
             Laptop.onHackComplete += ReleasePlayerControl;
             Laptop.onHackEnded += ReturnPlayerControl;
@@ -38,6 +51,11 @@ namespace Game.Scripts.Player {
         }
 
         private void OnDisable() {
+            playerMovement.Dispose();
+            playerMovement = null;
+            move = null;
+            rotate = null;
+
             InteractZone.onInteractionComplete -= ShowDetonatorOrExplode;
             Laptop.onHackComplete -= ReleasePlayerControl;
             Laptop.onHackEnded -= ReturnPlayerControl;
@@ -48,45 +66,27 @@ namespace Game.Scripts.Player {
             Drone.onExitFlightmode -= ReturnPlayerControl;
         }
 
-        private void Update(){
+        private void Update() {
             if (canWalk)
                 CalcutateMovement();
         }
 
         private void CalcutateMovement() {
-            #region old code
-            /*
-            _playerGrounded = _controller.isGrounded;
-            float h = Input.GetAxisRaw("Horizontal");
-            float v = Input.GetAxisRaw("Vertical");
+            Vector2 moveInput = move.ReadValue<Vector2>();
+            currentWalkSpeed = (moveInput.magnitude > 0) ? walkSpeed : 0;
 
-            transform.Rotate(transform.up, h);
+            Vector3 velocity = currentWalkSpeed * transform.forward * moveInput.y;
+            velocity.y = 0;
 
-            var direction = transform.forward * v;
-            var velocity = direction * _speed;
+            controller.Move(velocity * Time.deltaTime);
 
-
-            _anim.SetFloat("Speed", Mathf.Abs(velocity.magnitude));
-
-
-            if (_playerGrounded)
-                velocity.y = 0f;
-            if (!_playerGrounded)
-            {
-                velocity.y += -20f * Time.deltaTime;
-            }
-            
-            _controller.Move(velocity * Time.deltaTime);
-            */
-            #endregion
-            Vector2 walk = input.PlayerMovement.Move.ReadValue<Vector2>();
-            currentWalkSpeed = walk.magnitude > 0 ? walkSpeed : 0f;
-            transform.Translate(new Vector3(walk.x, 0, walk.y) * Time.deltaTime * currentWalkSpeed);
             if (anim != null)
-                anim.SetFloat("Speed", currentWalkSpeed);
+                anim.SetFloat(speedId, currentWalkSpeed);
 
-            //float rotate = input.PlayerMovement.Rotate.ReadValue<Vector2>();
-            //transform.Rotate(transform.up, rotate.normalized);
+            float rotationalInput = rotate.ReadValue<float>();
+            Vector3 eulerAngles = transform.eulerAngles;
+            eulerAngles.y += rotateSpeed * rotationalInput;
+            transform.eulerAngles = eulerAngles;
         }
 
         private void ShowDetonatorOrExplode(InteractZone zone) {

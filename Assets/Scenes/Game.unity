@@ -4593,7 +4593,6 @@ GameObject:
   - component: {fileID: 359860634}
   - component: {fileID: 359860633}
   - component: {fileID: 359860632}
-  - component: {fileID: 359860635}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -4642,9 +4641,14 @@ MonoBehaviour:
   detonator: {fileID: 2126203042}
   followCamera: {fileID: 1266060213}
   model: {fileID: 2077185962}
+  controller: {fileID: 359860632}
   currentWalkSpeed: 0
   walkSpeed: 2.5
   rotateSpeed: 1
+  sharedPlayerMovement: {fileID: -944628639613478452, guid: 5865d26bfdd5a554483a3aa10b06e05d, type: 3}
+  actionMapName: Player Movement
+  sharedMove: {fileID: -8274963492337446958, guid: 5865d26bfdd5a554483a3aa10b06e05d, type: 3}
+  sharedRotate: {fileID: -4022541377812000336, guid: 5865d26bfdd5a554483a3aa10b06e05d, type: 3}
 --- !u!4 &359860634
 Transform:
   m_ObjectHideFlags: 0
@@ -4661,27 +4665,6 @@ Transform:
   - {fileID: 1719376686}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -102.957, z: 0}
---- !u!65 &359860635
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 359860631}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &369121378
 PrefabInstance:
   m_ObjectHideFlags: 0
