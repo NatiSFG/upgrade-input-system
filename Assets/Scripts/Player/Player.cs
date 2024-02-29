@@ -90,7 +90,7 @@ namespace Game.Scripts.Player {
         }
 
         private void ShowDetonatorOrExplode(InteractZone zone) {
-            switch (zone.GetZoneID()) {
+            switch (zone.ZoneID) {
                 case 1: //place c4
                     detonator.Show();
                     break;

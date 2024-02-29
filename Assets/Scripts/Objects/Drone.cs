@@ -30,7 +30,7 @@ namespace Game.Scripts.LiveObjects {
 
         private void EnterFlightMode(InteractZone zone) {
             //drone cutscene
-            if (inFlightMode != true && zone.GetZoneID() == 4) {
+            if (inFlightMode != true && zone.ZoneID == 4) {
                 propAnim.SetTrigger("Start Flying");
                 droneCamera.Priority = 11;
                 inFlightMode = true;

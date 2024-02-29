@@ -44,7 +44,7 @@ namespace Game.Scripts.LiveObjects {
 
         private void EnterDriveMode(InteractZone zone) {
             //Enter Forklift
-            if (!inDriveMode && zone.GetZoneID() == 5) {
+            if (!inDriveMode && zone.ZoneID == 5) {
                 inDriveMode = true;
                 forkliftCamera.Priority = 11;
                 onDriveModeEntered?.Invoke();

@@ -32,7 +32,7 @@ namespace Game.Scripts.LiveObjects {
                 isReadyToBreak = true;
             }
             //crate zone
-            if (isReadyToBreak && zone.GetZoneID() == 6) {
+            if (isReadyToBreak && zone.ZoneID == 6) {
                 if (brakeOff.Count > 0) {
                     BreakPart();
                     StartCoroutine(PunchDelay());

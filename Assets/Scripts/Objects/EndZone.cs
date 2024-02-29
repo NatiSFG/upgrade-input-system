@@ -12,7 +12,7 @@ namespace Game.Scripts.LiveObjects {
         }
 
         private void ReachedEndZone(InteractZone zone) {
-            if (zone.GetZoneID() == 7) {
+            if (zone.ZoneID == 7) {
                 InteractZone.CurrentZoneID = 0;
                 SceneManager.LoadScene(0);
             }

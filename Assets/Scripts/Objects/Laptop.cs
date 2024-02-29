@@ -8,7 +8,7 @@ namespace Game.Scripts.LiveObjects {
     public class Laptop : MonoBehaviour {
         [SerializeField] private Slider progressBar;
         [SerializeField] private int hackTime = 5;
-        [SerializeField] private CinemachineVirtualCamera[] cameras;
+        [SerializeField] private CinemachineVirtualCamera[] cameras = { };
         [SerializeField] private InteractZone interact;
 
         private int activeCamera = 0;
@@ -20,6 +20,11 @@ namespace Game.Scripts.LiveObjects {
         private void OnEnable() {
             InteractZone.onHoldStarted += HackingInProgress;
             InteractZone.onHoldEnded += FinishedHacking;
+        }
+
+        private void OnDisable() {
+            InteractZone.onHoldStarted -= HackingInProgress;
+            InteractZone.onHoldEnded -= FinishedHacking;
         }
 
         private void Update() {
@@ -37,16 +42,16 @@ namespace Game.Scripts.LiveObjects {
 
                 if (Input.GetKeyDown(KeyCode.Escape)) {
                     isHacked = false;
+                    Debug.LogWarning(nameof(onHackEnded));
                     onHackEnded?.Invoke();
                     ResetCameras();
                 }
             }
         }
 
-        void ResetCameras() {
-            foreach (var cam in cameras) {
-                cam.Priority = 9;
-            }
+        private void ResetCameras() {
+            foreach (CinemachineVirtualCamera c in cameras)
+                c.Priority = 9;
         }
 
         private void HackingInProgress(int zoneID) {
@@ -54,6 +59,7 @@ namespace Game.Scripts.LiveObjects {
             if (zoneID == 3 && isHacked == false) {
                 progressBar.gameObject.SetActive(true);
                 StartCoroutine(HackingRoutine());
+                Debug.LogWarning(nameof(onHackComplete));
                 onHackComplete?.Invoke();
             }
         }
@@ -67,14 +73,16 @@ namespace Game.Scripts.LiveObjects {
                 StopAllCoroutines();
                 progressBar.gameObject.SetActive(false);
                 progressBar.value = 0;
+                Debug.LogWarning(nameof(onHackEnded));
                 onHackEnded?.Invoke();
             }
         }
 
-        IEnumerator HackingRoutine() {
+        private IEnumerator HackingRoutine() {
+            YieldInstruction wait = new WaitForEndOfFrame();
             while (progressBar.value < 1) {
                 progressBar.value += Time.deltaTime / hackTime;
-                yield return new WaitForEndOfFrame();
+                yield return wait;
             }
 
             isHacked = true;
@@ -82,11 +90,6 @@ namespace Game.Scripts.LiveObjects {
 
             progressBar.gameObject.SetActive(false);
             cameras[0].Priority = 11;
-        }
-
-        private void OnDisable() {
-            InteractZone.onHoldStarted -= HackingInProgress;
-            InteractZone.onHoldEnded -= FinishedHacking;
         }
     }
 }
